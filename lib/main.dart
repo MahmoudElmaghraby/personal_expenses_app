@@ -112,6 +112,61 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildLandscapeContent(
+    MediaQueryData mediaQuery,
+    AppBar appBar,
+    Widget txListWedget,
+  ) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Show chart',
+            style: Theme.of(context)
+                .textTheme
+                .headline6, //headline6 should be title but in the old version of flutter , and we put it because the defult matrial text style didn't work with IOS
+          ),
+          Switch.adaptive(
+            activeColor: Theme.of(context).accentColor,
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          ),
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransactions),
+            )
+          : txListWedget,
+    ];
+  }
+
+  List<Widget> _buildPortritContent(
+    MediaQueryData mediaQuery,
+    AppBar appBar,
+    Widget txListWedget,
+  ) {
+    return [
+      Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.3,
+        child: Chart(_recentTransactions),
+      ),
+      txListWedget
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -153,45 +208,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Show chart',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6, //headline6 should be title but in the old version of flutter , and we put it because the defult matrial text style didn't work with IOS
-                  ),
-                  Switch.adaptive(
-                    activeColor: Theme.of(context).accentColor,
-                    value: _showChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
+              ..._buildLandscapeContent(mediaQuery, appBar, txListWedget),
             if (!isLandscape)
-              Container(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.3,
-                child: Chart(_recentTransactions),
-              ),
-            if (!isLandscape) txListWedget,
-            if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: (mediaQuery.size.height -
-                              appBar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.7,
-                      child: Chart(_recentTransactions),
-                    )
-                  : txListWedget,
+              ..._buildPortritContent(mediaQuery, appBar, txListWedget),
           ],
         ),
       ),

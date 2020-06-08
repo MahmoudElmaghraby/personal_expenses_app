@@ -64,7 +64,7 @@ class _NewTransactionState extends State<NewTransaction> {
             top: 10,
             right: 10,
             left: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10, //viewInsets.bottom => it returns the space taken by soft keyboard
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
