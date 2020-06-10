@@ -28,12 +28,14 @@ class TransactionList extends StatelessWidget {
               ],
             );
           })
-        : ListView.builder(
-            itemBuilder: (ctx, index) {
-              return TransactionItem(transaction: transactions[index], deletTx: deletTx);
-            },
-            itemCount: transactions.length,
+        : ListView(
+            children: transactions
+                .map((tx) => TransactionItem(
+                  key: ValueKey(tx.id), //Keys must be in the root widget of the listView ,and We also used UniqueKey() but it didn't work because it generate unque key but it changed every time the build method is called
+                      transaction: tx,
+                      deletTx: deletTx,
+                    ))
+                .toList(),
           );
   }
 }
-
